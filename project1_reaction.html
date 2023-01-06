@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="jQuery.js"></script>
+    <title>Reaction tester</title>
+    <style>
+        html {
+            font-family: Calibri;
+        }
+
+        h1 {
+            text-align: center;
+            color: red;
+            background-color: pink;
+            align-content: center;
+        }
+
+        #start {
+            width: 200px;
+            /*height: 150%;*/
+            padding: 10px 10px;
+            border-radius: 100px;
+            background-color: #28dbfa;
+            color: #050344;
+            font-weight: 900;
+            border: none;
+        }
+
+        #shape {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            background-color: blue;
+            border-radius: 50%;
+        }
+
+        .c1 {
+            font-size: 25px;
+            color: rgb(160, 17, 65);
+            font-weight: bold;
+            border: 1px solid crimson !important;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
+        #c2 {
+            display: block;
+            height: 75vh;
+            /*background-color: gray;*/
+        }
+        #loose {
+            position: absolute;
+            left: 50vw;
+            top: 50vh;
+            font-size: 50px;
+            color: red;
+            /*opacity: 0;*/
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+<h1>Reaction Tester</h1>
+<h2>Click on circles</h2>
+<input class="c1" id="input1" type="text" style="margin-right: 10px" placeholder="current reaction time">
+<input class="c1" id="input2" type="text" style=" border: 4px solid red;" placeholder="best reaction time"><br><br>
+
+<button id="start" name="start">start game</button>
+<div id="c2">
+    <div class="hidden" id="shape"></div>
+</div>
+<div class="hidden" id="loose">You lost, clicked outside the box !</div>
+<script>
+    function init() {
+        document.getElementById("input1").value = "";
+        document.getElementById("input2").value = "";
+        move();
+        $('#shape').removeClass("hidden");
+
+    }
+    $('#start').click(function () {
+        init();
+        $('#loose').addClass("hidden");
+    })
+
+
+    var best = 10000;
+    var val1 = new Date().getTime();
+    document.getElementById("c2").onclick = function (e) {
+        if (document.getElementById("shape").contains(e.target)) {
+            document.getElementById("shape").style.display = "none";
+            var val2 = new Date().getTime();
+            val2 = val2 - val1;
+            if (val2 < best) {
+                best = val2;
+            }
+            document.getElementById("input1").value = "current = " + val2 / 1000 + " sec";
+            document.getElementById("input2").value = "best = " + best / 1000 + " sec";
+            //alert(val2 / 1000 + " sec");
+            move();
+        } else {
+            $('#loose').removeClass("hidden");
+            $('#shape').addClass("hidden");
+            init();
+        }
+    }
+
+    function changeColor() {
+
+        var hexa = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color = color + hexa[Math.floor(Math.random() * 16)];
+        }
+        document.getElementById("shape").style.backgroundColor = color;
+    }
+
+    function move() {
+        changeColor();
+        var top = Math.random() * 200;
+        var width = (Math.random() * 200) + 50;
+        var left = Math.abs(Math.random() * window.screen.width - width);
+
+        document.getElementById("shape").style.marginTop = top + "px";
+        document.getElementById("shape").style.marginLeft = left + "px";
+        document.getElementById("shape").style.width = width + "px";
+        document.getElementById("shape").style.height = width + "px";
+        document.getElementById("shape").style.display = "block";
+        val1 = new Date().getTime();
+    }
+</script>
+</body>
+
+</html>
